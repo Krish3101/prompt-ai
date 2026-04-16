@@ -1,0 +1,85 @@
+# Prompt Templates for Common Use Cases
+
+coding:
+  name: "💻 Coding Assistant"
+  description: "Generate code with explanations"
+  template: "Create a {language} function that {task}. Include comments explaining the logic and provide usage examples."
+  variables:
+    language: "Python"
+    task: "sorts an array using quicksort"
+
+writing:
+  name: "✍️ Content Writer"
+  description: "Blog posts, articles, stories"
+  template: "Write a {tone} {type} about {topic}. Target audience: {audience}. Length: approximately {length} words."
+  variables:
+    tone: "professional"
+    type: "blog post"
+    topic: "AI in healthcare"
+    audience: "healthcare professionals"
+    length: "800"
+
+image:
+  name: "🎨 Image Generation"
+  description: "DALL-E, Midjourney, Stable Diffusion prompts"
+  template: "Create a {style} image of {subject}. Setting: {setting}. Mood: {mood}. Additional details: {details}"
+  variables:
+    style: "photorealistic"
+    subject: "a futuristic city"
+    setting: "at sunset"
+    mood: "peaceful and inspiring"
+    details: "flying cars, neon lights, tall buildings"
+
+data_analysis:
+  name: "📊 Data Analysis"
+  description: "SQL queries, data insights"
+  template: "Analyze {data_type} data to find {insight}. Focus on {metric} and provide {output_format}."
+  variables:
+    data_type: "sales"
+    insight: "top performing products"
+    metric: "revenue and growth rate"
+    output_format: "summary with visualizations"
+
+email:
+  name: "📧 Email Writer"
+  description: "Professional emails"
+  template: "Write a {tone} email to {recipient} about {subject}. Purpose: {purpose}. Include {elements}."
+  variables:
+    tone: "professional and friendly"
+    recipient: "a client"
+    subject: "project update"
+    purpose: "inform about progress and next steps"
+    elements: "greeting, status update, action items, closing"
+
+social_media:
+  name: "📱 Social Media Post"
+  description: "Engaging social content"
+  template: "Create a {platform} post about {topic}. Tone: {tone}. Include {elements}. Target audience: {audience}."
+  variables:
+    platform: "LinkedIn"
+    topic: "launching a new product"
+    tone: "exciting and professional"
+    elements: "hook, benefits, call-to-action, hashtags"
+    audience: "tech professionals"
+
+tutorial:
+  name: "🎓 Tutorial/Guide"
+  description: "Step-by-step instructions"
+  template: "Create a step-by-step tutorial on {topic} for {skill_level} users. Include {elements} and explain {concepts}."
+  variables:
+    topic: "building a REST API"
+    skill_level: "intermediate"
+    elements: "prerequisites, setup instructions, code examples"
+    concepts: "authentication, error handling, best practices"
+
+creative:
+  name: "🌟 Creative Story"
+  description: "Fiction, narrative writing"
+  template: "Write a {genre} story about {protagonist} who {conflict}. Setting: {setting}. Tone: {tone}. Length: {length} words."
+  variables:
+    genre: "sci-fi"
+    protagonist: "a scientist"
+    conflict: "discovers time travel but faces ethical dilemmas"
+    setting: "near-future Earth"
+    tone: "thought-provoking"
+    length: "500"

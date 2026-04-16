@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="PromptSmith AI - Professional AI Prompt Engineering and Optimization Platform. Create, refine, and optimize AI prompts for any language model.">
+    <meta name="theme-color" content="#667eea">
+    <title>PromptSmith AI - Professional Prompt Engineering</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+</head>
+<body>
+    <!-- Skip to main content link for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <main class="container" id="main-content" role="main">
+        <header role="banner">
+            <div class="header-brand">
+                <h1>🚀 PromptSmith AI</h1>
+                <p class="subtitle">Professional AI Prompt Engineering & Optimization</p>
+                <div id="backend-status" class="backend-status" role="status" aria-live="polite">
+                    <span class="status-label">Backend:</span>
+                    <span id="backend-name" class="backend-name">Loading...</span>
+                    <span id="backend-indicator" class="status-indicator" aria-hidden="true">●</span>
+                </div>
+            </div>
+            <nav class="header-controls" aria-label="Main navigation">
+                <button id="dark-mode-toggle" class="icon-btn" title="Toggle Dark Mode (Ctrl+D)" aria-label="Toggle dark mode">
+                    <span class="icon" aria-hidden="true">🌙</span>
+                </button>
+                <button id="history-toggle-btn" class="icon-btn" title="View History (Ctrl+K)" aria-label="View prompt history" aria-expanded="false" aria-controls="history-panel">
+                    <span class="icon" aria-hidden="true">📚</span>
+                    <span class="label">History</span>
+                </button>
+                <button id="shortcuts-btn" class="icon-btn" title="Keyboard Shortcuts" aria-label="View keyboard shortcuts">
+                    <span class="icon" aria-hidden="true">⌨️</span>
+                    <span class="label">Shortcuts</span>
+                </button>
+            </nav>
+        </header>
+
+        <section class="generator-box" aria-labelledby="generate-heading">
+            <div class="section-header">
+                <h2 id="generate-heading"><span class="step-number" aria-hidden="true">1</span> Generate New Prompt</h2>
+                <p class="section-desc">Enter your idea and select the target AI model</p>
+            </div>
+            
+            <div class="template-section">
+                <button id="templates-toggle-btn" class="template-toggle-btn" aria-expanded="false" aria-controls="templates-dropdown">
+                    <span aria-hidden="true">📋</span> Use Template Library
+                </button>
+                <div id="templates-dropdown" class="templates-dropdown" style="display: none;" role="region" aria-label="Template library">
+                    <div class="templates-grid" id="templates-grid" role="list">
+                        <p class="loading-text">Loading templates...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="input-container">
+                <label for="user-input" class="visually-hidden">Enter your prompt idea</label>
+                <textarea id="user-input" placeholder="e.g., Write a blog post about overcoming startup challenges and learning from failure..." aria-describedby="input-stats"></textarea>
+                <div class="input-stats" id="input-stats" aria-live="polite">
+                    <span id="char-count" class="stat-item">
+                        <span class="stat-icon" aria-hidden="true">📝</span>
+                        <span class="stat-value">0</span> characters
+                    </span>
+                    <span class="stat-divider" aria-hidden="true">|</span>
+                    <span id="word-count" class="stat-item">
+                        <span class="stat-icon" aria-hidden="true">📄</span>
+                        <span class="stat-value">0</span> words
+                    </span>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <div class="control-group">
+                    <label for="model-select" id="model-label">
+                        <span class="label-icon" aria-hidden="true">🤖</span>
+                        Target AI Model
+                    </label>
+                    <select id="model-select" aria-labelledby="model-label">
+                        <option value="mistral">Mistral 7B (Free)</option>
+                        <option value="claude">Claude 3 Haiku</option>
+                        <option value="chatgpt">ChatGPT (GPT-3.5)</option>
+                        <option value="gpt4">GPT-4</option>
+                        <option value="gpt4o">GPT-4o (Optimized)</option>
+                        <option value="gemini">Gemini Pro</option>
+                        <option value="llama">Llama 3 (Free)</option>
+                        <option value="custom">Custom Model...</option>
+                    </select>
+                </div>
+                <div class="action-buttons">
+                    <button id="generate-btn" class="primary-btn" aria-describedby="generate-hint">
+                        <span class="btn-icon" aria-hidden="true">✨</span>
+                        Generate Prompt
+                    </button>
+                    <span id="generate-hint" class="visually-hidden">Press Ctrl+Enter to generate</span>
+                </div>
+            </div>
+            
+            <div id="custom-model-input" class="custom-model-box" style="display: none;" role="region" aria-label="Custom model configuration">
+                <label for="custom-model-name">
+                    <span class="label-icon" aria-hidden="true">🔧</span>
+                    Custom Model ID
+                </label>
+                <div class="custom-model-controls">
+                    <input type="text" id="custom-model-name" placeholder="e.g., anthropic/claude-3-opus or openai/gpt-4-turbo" aria-describedby="custom-model-help">
+                    <span id="custom-model-help" class="visually-hidden">Enter the full model identifier from your API provider</span>
+                    <button id="search-model-btn" class="search-btn" aria-label="Search for model best practices">
+                        <span aria-hidden="true">🔍</span> Search Best Practices
+                    </button>
+                </div>
+                <div id="model-info" class="model-info" style="display: none;" role="alert" aria-live="polite"></div>
+            </div>
+        </section>
+
+        <section class="results-box" aria-labelledby="results-heading">
+            <div class="section-header">
+                <h2 id="results-heading"><span class="step-number" aria-hidden="true">2</span> Your Generated Prompt</h2>
+                <div class="prompt-stats" aria-live="polite">
+                    <span id="prompt-token-count" class="token-badge">0 tokens</span>
+                    <span id="prompt-char-count" class="stat-mini">0 chars</span>
+                    <span class="stat-divider" aria-hidden="true">|</span>
+                    <span id="prompt-word-count" class="stat-mini">0 words</span>
+                </div>
+            </div>
+            <pre id="results-output" class="prompt-display" role="region" aria-label="Generated prompt output" tabindex="0">Your prompt will appear here...</pre>
+            <div id="quality-score" class="quality-score" style="display: none;" role="region" aria-label="Quality analysis results"></div>
+            <div class="button-group" role="group" aria-label="Prompt actions">
+                <button id="copy-btn" class="action-btn copy-btn" disabled aria-label="Copy prompt to clipboard">
+                    <span class="btn-icon" aria-hidden="true">📋</span>
+                    Copy
+                </button>
+                <button id="save-history-btn" class="action-btn save-btn" disabled aria-label="Save prompt to history">
+                    <span class="btn-icon" aria-hidden="true">💾</span>
+                    Save
+                </button>
+                <button id="analyze-btn" class="action-btn analyze-btn" disabled aria-label="Analyze prompt quality">
+                    <span class="btn-icon" aria-hidden="true">🔍</span>
+                    Analyze
+                </button>
+            </div>
+        </section>
+
+        <section id="refine-section" class="refine-box" style="display: none;" aria-labelledby="refine-heading">
+            <div class="section-header">
+                <h2 id="refine-heading"><span class="step-number" aria-hidden="true">3</span> Refine Your Prompt</h2>
+                <p class="section-desc">Add specific requirements or adjustments</p>
+            </div>
+            <label for="refine-input" class="visually-hidden">Enter refinement feedback</label>
+            <textarea id="refine-input" placeholder="e.g., Make it more formal and add a section about ROI..."></textarea>
+            <button id="refine-btn" class="primary-btn" aria-label="Refine the generated prompt">
+                <span class="btn-icon" aria-hidden="true">🔄</span>
+                Refine Prompt
+            </button>
+        </section>
+
+    </main>
+
+    <!-- History Panel (Sidebar) -->
+    <aside id="history-panel" class="history-panel" style="display: none;" role="complementary" aria-label="Prompt history panel" aria-hidden="true">
+        <div class="history-header">
+            <h2 id="history-heading">📚 Prompt History</h2>
+            <button id="history-close-btn" class="close-btn" aria-label="Close history panel">✕</button>
+        </div>
+        
+        <div class="history-controls">
+            <label for="history-search" class="visually-hidden">Search prompts</label>
+            <input type="text" id="history-search" placeholder="🔍 Search prompts..." aria-describedby="history-search-help">
+            <span id="history-search-help" class="visually-hidden">Type to filter your saved prompts</span>
+            <div class="filter-buttons" role="group" aria-label="Filter history">
+                <button id="filter-all" class="filter-btn active" aria-pressed="true">All</button>
+                <button id="filter-favorites" class="filter-btn" aria-pressed="false">⭐ Favorites</button>
+            </div>
+        </div>
+        
+        <div id="history-list" class="history-list" role="list" aria-label="Saved prompts">
+            <p class="no-history">No prompts saved yet. Generate and save your first prompt!</p>
+        </div>
+    </aside>
+
+    <!-- Template Modal -->
+    <div id="template-modal" class="template-modal" role="dialog" aria-modal="true" aria-labelledby="template-modal-title" aria-hidden="true">
+        <div class="template-modal-content">
+            <div class="template-modal-header">
+                <h2 class="template-modal-title" id="template-modal-title">Template</h2>
+                <button id="template-close-btn" class="close-btn" aria-label="Close template modal">✕</button>
+            </div>
+            <div id="template-variables" role="form" aria-label="Template variables"></div>
+            <div class="template-modal-actions">
+                <button id="template-apply-btn" class="template-apply-btn">Apply Template</button>
+                <button id="template-cancel-btn" class="template-cancel-btn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Keyboard Shortcuts Modal -->
+    <div id="shortcuts-modal" class="template-modal" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="shortcuts-modal-title" aria-hidden="true">
+        <div class="template-modal-content">
+            <div class="template-modal-header">
+                <h2 class="template-modal-title" id="shortcuts-modal-title">⌨️ Keyboard Shortcuts</h2>
+                <button id="shortcuts-close-btn" class="close-btn" aria-label="Close shortcuts modal">✕</button>
+            </div>
+            <div class="shortcuts-list" role="list">
+                <div class="shortcut-item" role="listitem">
+                    <kbd class="shortcut-key"><span class="shortcut-ctrl">Ctrl</span><span class="shortcut-separator" aria-hidden="true">/</span><span class="shortcut-cmd">⌘</span> + Enter</kbd>
+                    <span class="shortcut-desc">Generate or refine prompt</span>
+                </div>
+                <div class="shortcut-item" role="listitem">
+                    <kbd class="shortcut-key"><span class="shortcut-ctrl">Ctrl</span><span class="shortcut-separator" aria-hidden="true">/</span><span class="shortcut-cmd">⌘</span> + K</kbd>
+                    <span class="shortcut-desc">Toggle history panel</span>
+                </div>
+                <div class="shortcut-item" role="listitem">
+                    <kbd class="shortcut-key"><span class="shortcut-ctrl">Ctrl</span><span class="shortcut-separator" aria-hidden="true">/</span><span class="shortcut-cmd">⌘</span> + D</kbd>
+                    <span class="shortcut-desc">Toggle dark mode</span>
+                </div>
+                <div class="shortcut-item" role="listitem">
+                    <kbd class="shortcut-key">Esc</kbd>
+                    <span class="shortcut-desc">Close modals/panels</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div id="loading-overlay" class="loading-overlay" role="alert" aria-live="assertive" aria-busy="true">
+        <div class="spinner" aria-hidden="true"></div>
+        <p>Generating...</p>
+    </div>
+
+    <script src="/static/js/main.js"></script>
+</body>
+</html>

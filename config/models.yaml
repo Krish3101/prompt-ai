@@ -1,0 +1,47 @@
+mistral:
+  description: "Concise, instruction-tuned"
+  preferred_format: "Direct instructions with examples. Use clear task descriptions and provide 1-2 examples."
+  model_id: "mistralai/mistral-7b-instruct:free"
+  tips: "Best for: quick tasks, code generation, summaries. Keep prompts focused and specific."
+
+claude:
+  description: "Analytical, reasoning heavy"
+  preferred_format: "Use XML tags for structure. Wrap instructions in <instructions></instructions> and context in <context></context>."
+  model_id: "anthropic/claude-3-haiku"
+  tips: "Best for: analysis, research, complex reasoning. Claude excels with structured thinking prompts."
+
+chatgpt:
+  description: "Conversational, role-based"
+  preferred_format: "Use system message to set role/behavior, then provide user message. Format: 'You are a [role]. [Instructions].'"
+  model_id: "openai/gpt-3.5-turbo"
+  tips: "Best for: creative writing, conversations, general tasks. Works well with role-playing scenarios."
+
+gpt4:
+  description: "Advanced reasoning and analysis"
+  preferred_format: "Detailed system prompt with clear objectives, constraints, and output format. Break complex tasks into steps."
+  model_id: "openai/gpt-4"
+  tips: "Best for: complex analysis, coding, research. Provide thorough context and specific requirements."
+
+gpt4o:
+  description: "GPT-4 Optimized - Faster and multimodal"
+  preferred_format: "Clear, structured prompts with examples. Can process images and text together."
+  model_id: "openai/gpt-4o"
+  tips: "Best for: multimodal tasks, fast responses, cost-effective GPT-4 quality."
+
+gemini:
+  description: "Multi-modal, versatile"
+  preferred_format: "Clear structured prompts with step-by-step guidance. Use numbered lists for complex tasks."
+  model_id: "google/gemini-pro"
+  tips: "Best for: research, multimodal tasks, long context. Strong at following detailed instructions."
+
+llama:
+  description: "Open-source, efficient"
+  preferred_format: "Clear instructions with specific formatting. Use markdown for structure."
+  model_id: "meta-llama/llama-3-8b-instruct:free"
+  tips: "Best for: general tasks, quick responses. Good balance of speed and quality."
+
+custom:
+  description: "Custom model - user specified"
+  preferred_format: "Generic well-structured format with clear instructions, context, and examples"
+  model_id: "custom"
+  tips: "Use the 'Search Best Practices' button to get specific guidance for your chosen model."
