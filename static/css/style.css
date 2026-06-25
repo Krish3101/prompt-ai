@@ -1749,3 +1749,55 @@ body.dark-mode .stat-mini {
         font-size: 0.8rem;
     }
 }
+
+/* Auth Controls and Modal Styles */
+.auth-controls {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: 10px;
+}
+.user-display {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #e0e0e0;
+}
+.auth-tabs {
+    display: flex;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #ccc;
+}
+body.dark-mode .auth-tabs {
+    border-bottom-color: #444;
+}
+.tab-btn {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    background: none;
+    font-weight: bold;
+    cursor: pointer;
+    color: #333;
+    transition: border-bottom 0.2s, color 0.2s;
+}
+body.dark-mode .tab-btn {
+    color: #e0e0e0;
+}
+.tab-btn.active {
+    border-bottom: 2px solid #667eea;
+    color: #667eea;
+}
+body.dark-mode .tab-btn.active {
+    border-bottom: 2px solid #8b9cff;
+    color: #8b9cff;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+}
+body.dark-mode .form-group label {
+    color: #e0e0e0;
+}
+

@@ -12,7 +12,6 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const copyBtn = document.getElementById('copy-btn');
     const saveHistoryBtn = document.getElementById('save-history-btn');
-    const analyzeBtn = document.getElementById('analyze-btn');
     const loadingOverlay = document.getElementById('loading-overlay');
     
     // Custom model elements
@@ -53,6 +52,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const backendName = document.getElementById('backend-name');
     const backendIndicator = document.getElementById('backend-indicator');
 
+    // Auth elements
+    const authBtn = document.getElementById('auth-btn');
+    const authBtnLabel = document.getElementById('auth-btn-label');
+    const userDisplay = document.getElementById('user-display');
+    const usernameSpan = document.getElementById('username-span');
+    const authModal = document.getElementById('auth-modal');
+    const authCloseBtn = document.getElementById('auth-close-btn');
+    const tabLogin = document.getElementById('tab-login');
+    const tabRegister = document.getElementById('tab-register');
+    const authForm = document.getElementById('auth-form');
+    const authUsername = document.getElementById('auth-username');
+    const authPassword = document.getElementById('auth-password');
+    const authErrorMsg = document.getElementById('auth-error-msg');
+    const authSubmitBtn = document.getElementById('auth-submit-btn');
+    const authModalTitle = document.getElementById('auth-modal-title');
+
     // Store the last generated prompt for refinement
     let currentPrompt = "";
     let currentCustomModelId = "";
@@ -60,6 +75,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentModel = "";
     let allTemplates = {};
     let currentTemplate = null;
+    let isUserLoggedIn = false;
+    let authMode = 'login'; // 'login' or 'register'
 
     /**
      * Debounce function for performance optimization
@@ -348,59 +365,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     };
-    /**
-     * Analyze prompt quality
-     */
-    async function analyzePromptQuality() {
-        if (!currentPrompt) return;
-
-        toggleLoading(true);
-        const qualityScoreDiv = document.getElementById('quality-score');
-        if (qualityScoreDiv) {
-            qualityScoreDiv.style.display = 'none';
-        }
-
-        try {
-            const response = await fetch('/api/analyze-quality', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ prompt: currentPrompt })
-            });
-
-            if (!response.ok) throw new Error('Failed to analyze');
-
-            const data = await response.json();
-            
-            if (!qualityScoreDiv) {
-                alert('Quality analysis completed! Score: ' + data.score + '/100');
-                return;
-            }
-            
-            // Display quality score
-            let html = '<div class="quality-score-header">';
-            html += '<h3 style="margin: 0;">&#128202; Prompt Quality Analysis</h3>';
-            html += '<div class="score-badge score-' + data.rating_class + '">' + data.score + '/100</div>';
-            html += '</div>';
-            html += '<div class="quality-metrics">';
-            html += '<div class="metric-item"><span class="metric-icon">&#128221;</span><div><div class="metric-label">Words</div><div class="metric-value">' + data.metrics.words + '</div></div></div>';
-            html += '<div class="metric-item"><span class="metric-icon">&#128196;</span><div><div class="metric-label">Sentences</div><div class="metric-value">' + data.metrics.sentences + '</div></div></div>';
-            html += '<div class="metric-item"><span class="metric-icon">' + (data.checks.has_context ? '&#9989;' : '&#10060;') + '</span><div><div class="metric-label">Context</div><div class="metric-value">' + (data.checks.has_context ? 'Yes' : 'No') + '</div></div></div>';
-            html += '<div class="metric-item"><span class="metric-icon">' + (data.checks.has_examples ? '&#9989;' : '&#10060;') + '</span><div><div class="metric-label">Examples</div><div class="metric-value">' + (data.checks.has_examples ? 'Yes' : 'No') + '</div></div></div>';
-            html += '</div>';
-            if (data.suggestions && data.suggestions.length > 0) {
-                html += '<div class="quality-suggestions"><h4>&#128161; Suggestions for Improvement:</h4><ul class="suggestion-list">';
-                html += data.suggestions.map(function(s) { return '<li class="suggestion-item">' + s + '</li>'; }).join('');
-                html += '</ul></div>';
-            }
-            qualityScoreDiv.innerHTML = html;
-            qualityScoreDiv.style.display = 'block';
-        } catch (error) {
-            console.error('Error analyzing quality:', error);
-            alert('Failed to analyze prompt quality');
-        } finally {
-            toggleLoading(false);
-        }
-    }
 
     /**
      * Apply template
@@ -681,7 +645,6 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (copyBtn) copyBtn.disabled = false;
             if (saveHistoryBtn) saveHistoryBtn.disabled = false;
-            if (analyzeBtn) analyzeBtn.disabled = false;
             
             if (refineSection) refineSection.style.display = 'block'; // Show the refine box
             
@@ -802,6 +765,11 @@ document.addEventListener('DOMContentLoaded', () => {
      * Save current prompt to history
      */
     async function handleSaveHistory() {
+        if (!isUserLoggedIn) {
+            openAuthModal('login');
+            alert('Please log in to save prompts to history.');
+            return;
+        }
         if (!currentPrompt || !saveHistoryBtn) return;
 
         try {
@@ -815,6 +783,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
             });
 
+            if (response.status === 401) {
+                setLoggedInState(false);
+                openAuthModal('login');
+                return;
+            }
             if (!response.ok) throw new Error('Failed to save');
 
             const originalHTML = saveHistoryBtn.innerHTML;
@@ -835,42 +808,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    /**
-     * Toggle history panel
-     */
-    function toggleHistoryPanel() {
-        if (!historyPanel) return;
-        const isOpen = historyPanel.classList.toggle('open');
-        
-        // Update ARIA attributes
-        historyPanel.setAttribute('aria-hidden', !isOpen);
-        if (historyToggleBtn) {
-            historyToggleBtn.setAttribute('aria-expanded', isOpen);
-        }
-        
-        if (isOpen) {
-            historyPanel.style.display = 'flex';
-            loadHistory();
-            announceToScreenReader('History panel opened');
-            
-            // Focus on search for accessibility
-            if (historySearch) {
-                setTimeout(() => historySearch.focus(), 100);
-            }
-        } else {
-            announceToScreenReader('History panel closed');
-            
-            // Return focus to toggle button
-            if (historyToggleBtn) {
-                historyToggleBtn.focus();
-            }
-        }
-    }
-
-    /**
-     * Load and display history
-     */
     async function loadHistory() {
+        if (!isUserLoggedIn) {
+            if (historyList) {
+                historyList.innerHTML = '<p class="no-history" role="status">Please log in to view and save prompt history.</p>';
+            }
+            return;
+        }
         if (!historySearch || !filterFavoritesBtn || !historyList) return;
         
         try {
@@ -882,6 +826,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (favoritesOnly) url += 'favorites=true';
 
             const response = await fetch(url);
+            if (response.status === 401) {
+                setLoggedInState(false);
+                return;
+            }
             if (!response.ok) throw new Error('Failed to load history');
 
             const history = await response.json();
@@ -1018,7 +966,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     if (copyBtn) copyBtn.disabled = false;
                     if (saveHistoryBtn) saveHistoryBtn.disabled = false;
-                    if (analyzeBtn) analyzeBtn.disabled = false;
                     if (refineSection) refineSection.style.display = 'block';
                     
                     // Close history panel
@@ -1054,6 +1001,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch(`/api/history/${id}/favorite`, {
                 method: 'POST'
             });
+            if (response.status === 401) {
+                setLoggedInState(false);
+                openAuthModal('login');
+                return;
+            }
             if (!response.ok) throw new Error('Failed to toggle favorite');
             loadHistory();
         } catch (error) {
@@ -1071,6 +1023,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch(`/api/history/${id}`, {
                 method: 'DELETE'
             });
+            if (response.status === 401) {
+                setLoggedInState(false);
+                openAuthModal('login');
+                return;
+            }
             if (!response.ok) throw new Error('Failed to delete');
             loadHistory();
         } catch (error) {
@@ -1095,9 +1052,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (saveHistoryBtn) {
         saveHistoryBtn.addEventListener('click', handleSaveHistory);
-    }
-    if (analyzeBtn) {
-        analyzeBtn.addEventListener('click', analyzePromptQuality);
     }
     if (historySearch) {
         // Debounce history search for performance
@@ -1125,7 +1079,38 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Add event listeners
+    /**
+     * Toggle history panel
+     */
+    function toggleHistoryPanel() {
+        if (!historyPanel) return;
+        const isOpen = historyPanel.classList.toggle('open');
+        
+        // Update ARIA attributes
+        historyPanel.setAttribute('aria-hidden', !isOpen);
+        if (historyToggleBtn) {
+            historyToggleBtn.setAttribute('aria-expanded', isOpen);
+        }
+        
+        if (isOpen) {
+            historyPanel.style.display = 'flex';
+            loadHistory();
+            announceToScreenReader('History panel opened');
+            
+            // Focus on search for accessibility
+            if (historySearch) {
+                setTimeout(() => historySearch.focus(), 100);
+            }
+        } else {
+            announceToScreenReader('History panel closed');
+            
+            // Return focus to toggle button
+            if (historyToggleBtn) {
+                historyToggleBtn.focus();
+            }
+        }
+    }
+
     if (generateBtn) {
         generateBtn.addEventListener('click', handleGenerateClick);
     }
