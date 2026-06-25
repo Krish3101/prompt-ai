@@ -134,31 +134,5 @@ $env:FLASK_ENV="development"  # Windows PowerShell
 python app.py
 ```
 
-## 🤝 Contributing
 
-Contributions are welcome! Please:
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add AmazingFeature'`)
-4. Push to branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
 
-## 📝 License
-
-This project is licensed under the MIT License - see LICENSE file for details.
-
-## 🙏 Acknowledgments
-
-- OpenRouter for API access
-- DuckDuckGo for web search
-- Flask community
-- All contributors and users
-
-## 📧 Contact
-
-- GitHub: [@yourusername](https://github.com/yourusername)
-- Email: your.email@example.com
-
----
-
-**Made with ❤️ by the PromptSmith Team**
