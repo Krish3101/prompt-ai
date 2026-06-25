@@ -10,8 +10,7 @@ ENV/
 *.log
 
 # Databases & local configs
-data/promptsmith.db
-data/logs/*.log
+history.json
 .env
 
 # OS

@@ -8,21 +8,18 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# Configure logging
-os.makedirs('data/logs', exist_ok=True)
-os.makedirs('data/cache', exist_ok=True)
-log_filename = f"data/logs/app_{datetime.now().strftime('%Y%m%d')}.log"
+HISTORY_FILE = 'history.json'
 
+# Configure logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[logging.FileHandler(log_filename), logging.StreamHandler()]
+    handlers=[logging.StreamHandler()]
 )
 logger = logging.getLogger(__name__)
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='public', static_folder='public', static_url_path='/static')
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB max request size
-HISTORY_FILE = 'data/cache/history.json'
 
 @app.after_request
 def add_security_headers(response):
