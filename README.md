@@ -32,15 +32,12 @@ The basic steps are:
 ```
 promptsmith/
 ├── app.py                 # Core application & API endpoints
-├── requirements.txt       # Python dependencies (Flask, requests)
+├── requirements.txt       # Python dependencies (Flask, requests, dotenv)
 ├── README.md              # This file
-├── templates/             # HTML templates
-│   └── index.html         # Main UI
-└── static/                # Static assets
-    ├── css/
-    │   └── style.css      # Styles with dark mode
-    └── js/
-        └── main.js        # Frontend logic
+└── public/                # Frontend assets (Static & Templates)
+    ├── index.html         # Main UI
+    ├── style.css          # Styles with dark mode
+    └── main.js            # Frontend logic
 ```
 
 ## 🔌 Backend Support
@@ -125,7 +122,7 @@ pip install -r requirements.txt --force-reinstall
 
 The application is a lightweight MVP utilizing a single-file backend architecture:
 - **app.py** - Flask application holding all logic (REST API, offline generator, LLM requests, and flat-file history persistence).
-- **History** is saved locally in `data/cache/history.json`.
+- **History** is saved locally in `history.json`.
 ### Running in Development Mode
 
 ```bash
